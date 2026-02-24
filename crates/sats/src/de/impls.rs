@@ -3,9 +3,7 @@ use super::{
     ProductKind, ProductVisitor, SeqProductAccess, SliceVisitor, SumAccess, SumVisitor, VariantAccess, VariantVisitor,
 };
 use crate::{
-    de::{array_visit, ArrayAccess, ArrayVisitor, GrowingVec},
-    AlgebraicType, AlgebraicValue, ArrayType, ArrayValue, ProductType, ProductTypeElement, ProductValue, SumType,
-    SumValue, WithTypespace, F32, F64,
+    AlgebraicType, AlgebraicValue, ArrayType, ArrayValue, F32, F64, ProductType, ProductTypeElement, ProductValue, SumType, SumValue, WithTypespace, de::{ArrayAccess, ArrayVisitor, GrowingVec, NoSeed, array_visit}
 };
 use crate::{i256, u256};
 use core::{iter, marker::PhantomData, ops::Bound};
@@ -365,6 +363,8 @@ impl<'de, T: Deserialize<'de>, U: Deserialize<'de>> VariantVisitor<'de> for Resu
         }
     }
 }
+
+impl_deserialize!([T: Deserialize<'de>] Bound<T>, de => NoSeed::default().deserialize(de));
 
 /// The visitor deserializes a `Bound<T>`.
 #[derive(Clone, Copy)]
